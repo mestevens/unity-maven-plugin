@@ -19,6 +19,8 @@ import org.eclipse.aether.resolution.DependencyRequest;
 import org.eclipse.aether.resolution.DependencyResolutionException;
 import org.eclipse.aether.util.artifact.JavaScopes;
 
+import ca.mestevens.unity.utils.DependencyGatherer;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -66,34 +68,11 @@ public class FrameworkDependenciesMojo extends AbstractMojo {
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		getLog().info("Starting execution");
 		
-		CollectRequest collectRequest = new CollectRequest();
-		final Artifact mainArtifact = new DefaultArtifact(project.getArtifact().getId());
-		collectRequest.setRoot(new Dependency(mainArtifact, JavaScopes.COMPILE));
-		collectRequest.setRepositories(projectRepos);
-		DependencyRequest dependencyRequest = new DependencyRequest().setCollectRequest(collectRequest);
-		dependencyRequest.setFilter(new DependencyFilter() {
-
-			public boolean accept(DependencyNode node,
-					List<DependencyNode> parents) {
-				Artifact nodeArtifact = node.getArtifact();
-				
-				if (nodeArtifact.getGroupId().equals(mainArtifact.getGroupId()) &&
-						nodeArtifact.getArtifactId().equals(mainArtifact.getArtifactId())) {
-					return false;
-				}
-				return true;
-			}
-			
-		});
-		List<ArtifactResult> resolvedArtifacts;
-		try {
-			
-			resolvedArtifacts = repoSystem.resolveDependencies(repoSession, dependencyRequest).getArtifactResults();
-		} catch (DependencyResolutionException e) {
-			getLog().error("Could not resolve dependencies");
-			getLog().error(e.getMessage());
-			throw new MojoFailureException("Could not resolve dependencies");
-		}
+		DependencyGatherer dependencyGatherer = new DependencyGatherer(getLog(), project, projectRepos, repoSystem, repoSession);
+		
+	
+		List<ArtifactResult> resolvedArtifacts = dependencyGatherer.resolveArtifacts();;
+		
 		
 		File resultFile = new File(project.getBasedir() + "/Assets/Runtime/Plugins");
 		try {
@@ -109,18 +88,11 @@ public class FrameworkDependenciesMojo extends AbstractMojo {
 		
 		for (ArtifactResult resolvedArtifact : resolvedArtifacts) {
 			Artifact artifact = resolvedArtifact.getArtifact();
-			for(String key : artifact.getProperties().keySet()) {
-				getLog().info(key + artifact.getProperty(key, ""));
-			}
 			if (artifact.getProperty("type", "").equals("unity-library")) {
-				
 					// Get File from result artifact
 					File file = artifact.getFile();
 					try {
 						FileUtils.copyFileToDirectory(file, resultFile);
-						//File pluginFile = new File(resultFile.getAbsolutePath() + "/" + file.getName());
-						//File renamedFile = new File(pluginFile.getAbsolutePath().replace(".unity-library", ".dll"));
-						//FileUtils.rename(pluginFile, renamedFile);
 					} catch (IOException e) {
 						getLog().error("Problem copying dll " + file.getName() + " to " + resultFile.getAbsolutePath());
 						getLog().error(e.getMessage());
