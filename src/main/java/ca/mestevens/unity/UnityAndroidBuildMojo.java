@@ -109,7 +109,7 @@ public class UnityAndroidBuildMojo extends AbstractMojo {
 			commandList.add("-quit");
 			commandList.add("-logFile");
 			int returnValue = processRunner.runProcess(null, commandList.toArray(new String[commandList.size()]));
-			checkReturnValue(returnValue);
+			processRunner.checkReturnValue(returnValue);
 			
 			InputStream pomStream = this.getClass().getClassLoader().getResourceAsStream("pom-template-android.xml");
 			String pomString = IOUtils.toString(pomStream);
@@ -120,7 +120,7 @@ public class UnityAndroidBuildMojo extends AbstractMojo {
 			pomInfoString += "<version>" + project.getVersion() + "</version>";
 			pomString = pomString.replace("<pomInfo></pomInfo>", pomInfoString);
 			
-			DependencyGatherer dependencyGatherer = new DependencyGatherer(project);
+			DependencyGatherer dependencyGatherer = new DependencyGatherer(getLog(), project, projectRepos, repoSystem, repoSession);
 			String pomDependenciesString = dependencyGatherer.createPomDependencySection();
 			pomString = pomString.replace("<pomDependencies></pomDependencies>", pomDependenciesString);
 			
@@ -135,12 +135,6 @@ public class UnityAndroidBuildMojo extends AbstractMojo {
 			if (scriptFile.exists()) {
 				scriptFile.delete();
 			}
-		}
-	}
-	
-	protected void checkReturnValue(int returnValue) throws MojoFailureException {
-		if (returnValue != 0) {
-			throw new MojoFailureException("Failed to build project.");
 		}
 	}
 

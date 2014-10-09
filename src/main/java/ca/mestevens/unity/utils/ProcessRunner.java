@@ -39,5 +39,11 @@ public class ProcessRunner {
 			throw new MojoFailureException(e.getMessage());
 		}
 	}
+	
+	public void checkReturnValue(int returnValue) throws MojoFailureException {
+		if (returnValue != 0) {
+			throw new MojoFailureException("Failed to build project.");
+		}
+	}
 
 }

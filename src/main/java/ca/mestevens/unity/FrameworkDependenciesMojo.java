@@ -1,13 +1,8 @@
-package ca.mestevens.unity.utils;
+package ca.mestevens.unity;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
-//import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.eclipse.aether.RepositorySystem;
@@ -24,31 +19,53 @@ import org.eclipse.aether.resolution.DependencyRequest;
 import org.eclipse.aether.resolution.DependencyResolutionException;
 import org.eclipse.aether.util.artifact.JavaScopes;
 
-public class DependencyGatherer {
-	
-	private MavenProject project;
-	private Log log;
-	
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
+/**
+ * Goal which generates your framework dependencies in the target directory.
+ *
+ * @goal unity-library-dependencies
+ * 
+ * @phase initialize
+ */
+public class FrameworkDependenciesMojo extends AbstractMojo {
+
+	/**
+	 * @parameter property="project"
+	 * @readonly
+	 * @required
+	 */
+	public MavenProject project;
+
+	/**
+	 * The project's remote repositories to use for the resolution of project
+	 * dependencies.
+	 * 
+	 * @parameter default-value="${project.remoteProjectRepositories}"
+	 * @readonly
+	 */
 	protected List<RemoteRepository> projectRepos;
 
-
+	/**
+	 * The entry point to Aether, i.e. the component doing all the work.
+	 * 
+	 * @component
+	 */
 	protected RepositorySystem repoSystem;
 
-
+	/**
+	 * The current repository/network configuration of Maven.
+	 * 
+	 * @parameter default-value="${repositorySystemSession}"
+	 * @readonly
+	 */
 	protected RepositorySystemSession repoSession;
-	
-	public DependencyGatherer(Log log, MavenProject project, List<RemoteRepository> projectRepos, RepositorySystem repoSystem,
-			RepositorySystemSession repoSession) {
-		this.log = log;
-		this.project = project;
-		this.projectRepos = projectRepos;
-		this.repoSystem = repoSystem;
-		this.repoSession = repoSession;
-	}
-	
-	public String createPomDependencySection() throws MojoFailureException {
-		String dependencies = "";
+
+	public void execute() throws MojoExecutionException, MojoFailureException {
+		getLog().info("Starting execution");
+		
 		CollectRequest collectRequest = new CollectRequest();
 		final Artifact mainArtifact = new DefaultArtifact(project.getArtifact().getId());
 		collectRequest.setRoot(new Dependency(mainArtifact, JavaScopes.COMPILE));
@@ -73,8 +90,8 @@ public class DependencyGatherer {
 			
 			resolvedArtifacts = repoSystem.resolveDependencies(repoSession, dependencyRequest).getArtifactResults();
 		} catch (DependencyResolutionException e) {
-			log.error("Could not resolve dependencies");
-			log.error(e.getMessage());
+			getLog().error("Could not resolve dependencies");
+			getLog().error(e.getMessage());
 			throw new MojoFailureException("Could not resolve dependencies");
 		}
 		
@@ -85,36 +102,32 @@ public class DependencyGatherer {
 			}
 			FileUtils.mkdir(resultFile.getAbsolutePath());
 		} catch (IOException e) {
-			log.error("Problem deleting or creating plugin folder at: " + resultFile.getAbsolutePath());
-			log.error(e.getMessage());
+			getLog().error("Problem deleting or creating plugin folder at: " + resultFile.getAbsolutePath());
+			getLog().error(e.getMessage());
 			throw new MojoFailureException("Problem deleting or creating plugin folder at: " + resultFile.getAbsolutePath());
 		}
 		
 		for (ArtifactResult resolvedArtifact : resolvedArtifacts) {
 			Artifact artifact = resolvedArtifact.getArtifact();
-			if (artifact.getProperty("type", "").equals("aar")) {
-				dependencies += "<dependency>";
-				dependencies += "<groupId>" + artifact.getGroupId() + "</groupId>";
-				dependencies += "<artifactId>" + artifact.getArtifactId() + "</artifactId>";
-				dependencies += "<version>" + artifact.getVersion() + "</version>";
-				dependencies += "<type>" + artifact.getProperty("type", "") + "</type>";
-				dependencies += "</dependency>";
+			for(String key : artifact.getProperties().keySet()) {
+				getLog().info(key + artifact.getProperty(key, ""));
+			}
+			if (artifact.getProperty("type", "").equals("unity-library")) {
+				
+					// Get File from result artifact
+					File file = artifact.getFile();
+					try {
+						FileUtils.copyFileToDirectory(file, resultFile);
+						//File pluginFile = new File(resultFile.getAbsolutePath() + "/" + file.getName());
+						//File renamedFile = new File(pluginFile.getAbsolutePath().replace(".unity-library", ".dll"));
+						//FileUtils.rename(pluginFile, renamedFile);
+					} catch (IOException e) {
+						getLog().error("Problem copying dll " + file.getName() + " to " + resultFile.getAbsolutePath());
+						getLog().error(e.getMessage());
+						throw new MojoFailureException("Problem copying dll " + file.getName() + " to " + resultFile.getAbsolutePath());
+					}
 			}
 		}
-		return dependencies;
-	}
-	
-	public String createPomRepositoriesSection() {
-		String repositories = "<repositories>";
-		for(ArtifactRepository repository : project.getRemoteArtifactRepositories()) {
-			repositories += "<repository>";
-			repositories += "<id>" + repository.getId() + "</id>";
-			repositories += "<url>" + repository.getUrl() + "</url>";
-			repositories += "</repository>";
-		}
-		
-		repositories += "</repositories>";
-		return repositories;
-	}
 
+	}
 }

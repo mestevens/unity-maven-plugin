@@ -5,7 +5,6 @@
     <packaging>apk</packaging>
 
     <build>
-        <finalName>${project.artifactId}</finalName>
         <sourceDirectory>src</sourceDirectory>
         <pluginManagement>
             <plugins>
@@ -58,7 +57,31 @@
         </plugins>
     </build>
 
-    <pomDependencies></pomDependencies>
+    <dependencies>
+    	<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>android</artifactId>
+			<version>4.3_r2</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.android.gms</groupId>
+			<artifactId>play-services</artifactId>
+			<version>4.4.52</version>
+			<type>aar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.android.support</groupId>
+			<artifactId>support-v4</artifactId>
+			<version>19.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>unity</groupId>
+			<artifactId>unity-android</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<pomDependencies></pomDependencies>
+    </dependencies>
     
     <pomRepositories></pomRepositories>
 

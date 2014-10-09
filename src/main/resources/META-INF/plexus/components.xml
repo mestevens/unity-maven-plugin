@@ -9,7 +9,7 @@
 				<extension>unity-project</extension>
 				<language>c#</language>
 				<addedToClasspath>true</addedToClasspath>
-				<includesDependencies>false</includesDependencies>
+				<includesDependencies>true</includesDependencies>
 			</configuration>
 		</component>
 		<component>
@@ -22,9 +22,64 @@
 					<lifecycle>
 						<id>default</id>
 						<phases>
+							<initialize>
+								ca.mestevens.unity:unity-maven-plugin:unity-library-dependencies
+							</initialize>
 							<compile>
 								ca.mestevens.unity:unity-maven-plugin:unity-android-build
 							</compile>
+							<package>
+								ca.mestevens.unity:unity-maven-plugin:unity-android-package-apk
+							</package>
+						</phases>
+					</lifecycle>
+					<lifecycle>
+						<id>clean</id>
+						<phases>
+							<clean>
+								org.apache.maven.plugins:maven-clean-plugin:clean
+							</clean>
+						</phases>
+					</lifecycle>
+				</lifecycles>
+			</configuration>
+		</component>
+		<component>
+			<role>org.apache.maven.artifact.handler.ArtifactHandler</role>
+			<role-hint>unity-library</role-hint>
+			<implementation>org.apache.maven.artifact.handler.DefaultArtifactHandler
+			</implementation>
+			<configuration>
+				<extension>dll</extension>
+				<language>c#</language>
+				<type>dll</type>
+			</configuration>
+		</component>
+		<component>
+			<role>org.apache.maven.lifecycle.mapping.LifecycleMapping</role>
+			<role-hint>unity-library</role-hint>
+			<implementation>org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping
+			</implementation>
+			<configuration>
+				<lifecycles>
+					<lifecycle>
+						<id>default</id>
+						<phases>
+							<initialize>
+								ca.mestevens.unity:unity-maven-plugin:unity-library-dependencies
+							</initialize>
+							<compile>
+								ca.mestevens.unity:unity-maven-plugin:unity-build-dll
+							</compile>
+							<package>
+								ca.mestevens.unity:unity-maven-plugin:unity-package-dll
+							</package>
+							<install>
+								org.apache.maven.plugins:maven-install-plugin:install
+							</install>
+							<deploy>
+								org.apache.maven.plugins:maven-deploy-plugin:deploy
+							</deploy>
 						</phases>
 					</lifecycle>
 					<lifecycle>
