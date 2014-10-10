@@ -69,10 +69,7 @@ public class FrameworkDependenciesMojo extends AbstractMojo {
 		getLog().info("Starting execution");
 		
 		DependencyGatherer dependencyGatherer = new DependencyGatherer(getLog(), project, projectRepos, repoSystem, repoSession);
-		
-	
 		List<ArtifactResult> resolvedArtifacts = dependencyGatherer.resolveArtifacts();;
-		
 		
 		File resultFile = new File(project.getBasedir() + "/Assets/Runtime/Plugins");
 		try {

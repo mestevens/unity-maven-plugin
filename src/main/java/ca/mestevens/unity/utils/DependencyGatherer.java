@@ -47,26 +47,29 @@ public class DependencyGatherer {
 		this.repoSession = repoSession;
 	}
 	
-	public String createPomDependencySection() throws MojoFailureException {
+	public String createAndroidPomDependencySection() throws MojoFailureException {
 		String dependencies = "";
-		
 		List<ArtifactResult> resolvedArtifacts = resolveArtifacts();
-		
-		File resultFile = new File(project.getBasedir() + "/Assets/Runtime/Plugins");
-		try {
-			if (resultFile.exists()) {
-				FileUtils.deleteDirectory(resultFile);
-			}
-			FileUtils.mkdir(resultFile.getAbsolutePath());
-		} catch (IOException e) {
-			log.error("Problem deleting or creating plugin folder at: " + resultFile.getAbsolutePath());
-			log.error(e.getMessage());
-			throw new MojoFailureException("Problem deleting or creating plugin folder at: " + resultFile.getAbsolutePath());
-		}
-		
 		for (ArtifactResult resolvedArtifact : resolvedArtifacts) {
 			Artifact artifact = resolvedArtifact.getArtifact();
 			if (artifact.getProperty("type", "").equals("aar")) {
+				dependencies += "<dependency>";
+				dependencies += "<groupId>" + artifact.getGroupId() + "</groupId>";
+				dependencies += "<artifactId>" + artifact.getArtifactId() + "</artifactId>";
+				dependencies += "<version>" + artifact.getVersion() + "</version>";
+				dependencies += "<type>" + artifact.getProperty("type", "") + "</type>";
+				dependencies += "</dependency>";
+			}
+		}
+		return dependencies;
+	}
+	
+	public String createXcodePomDependencySection() throws MojoFailureException {
+		String dependencies = "";
+		List<ArtifactResult> resolvedArtifacts = resolveArtifacts();
+		for (ArtifactResult resolvedArtifact : resolvedArtifacts) {
+			Artifact artifact = resolvedArtifact.getArtifact();
+			if (artifact.getProperty("type", "").equals("xcode-framework")) {
 				dependencies += "<dependency>";
 				dependencies += "<groupId>" + artifact.getGroupId() + "</groupId>";
 				dependencies += "<artifactId>" + artifact.getArtifactId() + "</artifactId>";

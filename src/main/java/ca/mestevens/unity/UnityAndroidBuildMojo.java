@@ -121,7 +121,7 @@ public class UnityAndroidBuildMojo extends AbstractMojo {
 			pomString = pomString.replace("<pomInfo></pomInfo>", pomInfoString);
 			
 			DependencyGatherer dependencyGatherer = new DependencyGatherer(getLog(), project, projectRepos, repoSystem, repoSession);
-			String pomDependenciesString = dependencyGatherer.createPomDependencySection();
+			String pomDependenciesString = dependencyGatherer.createAndroidPomDependencySection();
 			pomString = pomString.replace("<pomDependencies></pomDependencies>", pomDependenciesString);
 			
 			String pomRepositoriesString = dependencyGatherer.createPomRepositoriesSection();
