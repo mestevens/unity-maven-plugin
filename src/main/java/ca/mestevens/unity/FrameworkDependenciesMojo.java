@@ -14,12 +14,15 @@ import org.eclipse.aether.graph.Dependency;
 import org.eclipse.aether.graph.DependencyFilter;
 import org.eclipse.aether.graph.DependencyNode;
 import org.eclipse.aether.repository.RemoteRepository;
+import org.eclipse.aether.resolution.ArtifactRequest;
+import org.eclipse.aether.resolution.ArtifactResolutionException;
 import org.eclipse.aether.resolution.ArtifactResult;
 import org.eclipse.aether.resolution.DependencyRequest;
 import org.eclipse.aether.resolution.DependencyResolutionException;
 import org.eclipse.aether.util.artifact.JavaScopes;
 
 import ca.mestevens.unity.utils.DependencyGatherer;
+import ca.mestevens.unity.utils.ProcessRunner;
 
 import java.io.File;
 import java.io.IOException;
@@ -86,15 +89,29 @@ public class FrameworkDependenciesMojo extends AbstractMojo {
 		for (ArtifactResult resolvedArtifact : resolvedArtifacts) {
 			Artifact artifact = resolvedArtifact.getArtifact();
 			if (artifact.getProperty("type", "").equals("unity-library")) {
-					// Get File from result artifact
-					File file = artifact.getFile();
-					try {
-						FileUtils.copyFileToDirectory(file, resultFile);
-					} catch (IOException e) {
-						getLog().error("Problem copying dll " + file.getName() + " to " + resultFile.getAbsolutePath());
-						getLog().error(e.getMessage());
-						throw new MojoFailureException("Problem copying dll " + file.getName() + " to " + resultFile.getAbsolutePath());
-					}
+				// Get File from result artifact
+				File file = artifact.getFile();
+				try {
+					FileUtils.copyFileToDirectory(file, resultFile);
+				} catch (IOException e) {
+					getLog().error("Problem copying dll " + file.getName() + " to " + resultFile.getAbsolutePath());
+					getLog().error(e.getMessage());
+					throw new MojoFailureException("Problem copying dll " + file.getName() + " to " + resultFile.getAbsolutePath());
+				}
+				try {
+					Artifact ab = new DefaultArtifact(artifact.getGroupId(), artifact.getArtifactId(), "ios-plugin",
+							"zip", artifact.getVersion());
+					ArtifactRequest request = new ArtifactRequest(ab, projectRepos, null);
+					ArtifactResult artifactResult = repoSystem.resolveArtifact(repoSession, request);
+					Artifact a = artifactResult.getArtifact();
+					File zippedFile = a.getFile();
+					File iOSPluginsFolder = new File(project.getBasedir() + "/Assets/Plugins/iOS");
+					ProcessRunner processRunner = new ProcessRunner(getLog());
+					processRunner.runProcess(null, "unzip", "-uo", zippedFile.getAbsolutePath(), "-d", iOSPluginsFolder.getAbsolutePath());
+				} catch (ArtifactResolutionException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		}
 

@@ -46,6 +46,16 @@
 		</component>
 		<component>
 			<role>org.apache.maven.artifact.handler.ArtifactHandler</role>
+			<role-hint>ios-plugin</role-hint>
+			<implementation>org.apache.maven.artifact.handler.DefaultArtifactHandler
+			</implementation>
+			<configuration>
+				<extension>zip</extension>
+				<type>ios-plugin</type>
+			</configuration>
+		</component>
+		<component>
+			<role>org.apache.maven.artifact.handler.ArtifactHandler</role>
 			<role-hint>unity-library</role-hint>
 			<implementation>org.apache.maven.artifact.handler.DefaultArtifactHandler
 			</implementation>

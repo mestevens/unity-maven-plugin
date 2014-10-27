@@ -93,15 +93,10 @@ public class UnityXcodeBuildMojo extends AbstractMojo {
 			scriptStream.close();
 			ProcessRunner processRunner = new ProcessRunner(getLog());
 			
-			/*List<String> stupidCommand = new ArrayList<String>();
-			stupidCommand.add(unity);
-			stupidCommand.add("-batchmode");
-			stupidCommand.add("-quit");
-			stupidCommand.add("-logFile");
-			processRunner.runProcess(null, stupidCommand.toArray(new String[stupidCommand.size()]));*/
-			
 			List<String> commandList = new ArrayList<String>();
 			commandList.add(unity);
+			commandList.add("-projectPath");
+			commandList.add(project.getBasedir().getAbsolutePath());
 			commandList.add("-executeMethod");
 			commandList.add("ca.mestevens.unity.IOSBuildScript.GenerateXcodeProject");
 			if (scenes != null && !scenes.isEmpty()) {
@@ -142,6 +137,8 @@ public class UnityXcodeBuildMojo extends AbstractMojo {
 			pomString = pomString.replace("<pomRepositories></pomRepositories>", pomRepositoriesString);
 			
 			FileUtils.writeStringToFile(pomFile, pomString);
+			
+			processRunner.runProcess(xcodeTarget + "/" + unityProjectName + "-ios", "mvn", "clean", "initialize", "-Dxcode.add.frameworks", "-Dxcode.project.name=Unity-iPhone.xcodeproj");
 			
 		} catch (Exception ex) {
 			throw new MojoFailureException(ex.getMessage());

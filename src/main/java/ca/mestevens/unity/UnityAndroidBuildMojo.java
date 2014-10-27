@@ -94,6 +94,8 @@ public class UnityAndroidBuildMojo extends AbstractMojo {
 			ProcessRunner processRunner = new ProcessRunner(getLog());
 			List<String> commandList = new ArrayList<String>();
 			commandList.add(unity);
+			commandList.add("-projectPath");
+			commandList.add(project.getBasedir().getAbsolutePath());
 			commandList.add("-executeMethod");
 			commandList.add("ca.mestevens.unity.AndroidBuildScript.GenerateStudioProject");
 			if (scenes != null && !scenes.isEmpty()) {
