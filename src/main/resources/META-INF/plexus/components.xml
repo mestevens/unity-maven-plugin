@@ -50,8 +50,18 @@
 			<implementation>org.apache.maven.artifact.handler.DefaultArtifactHandler
 			</implementation>
 			<configuration>
-				<extension>zip</extension>
+				<extension>ios-plugin</extension>
 				<type>ios-plugin</type>
+			</configuration>
+		</component>
+		<component>
+			<role>org.apache.maven.artifact.handler.ArtifactHandler</role>
+			<role-hint>android-plugin</role-hint>
+			<implementation>org.apache.maven.artifact.handler.DefaultArtifactHandler
+			</implementation>
+			<configuration>
+				<extension>android-plugin</extension>
+				<type>android-plugin</type>
 			</configuration>
 		</component>
 		<component>

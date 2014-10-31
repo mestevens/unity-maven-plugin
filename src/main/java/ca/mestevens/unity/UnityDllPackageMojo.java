@@ -55,9 +55,9 @@ public class UnityDllPackageMojo extends AbstractMojo {
 			throw new MojoFailureException("Dll file does not exist: " + "");
 		}
 		project.getArtifact().setFile(dllFile);
-		File iOSFiles = new File(project.getBasedir().getAbsolutePath() + "/Assets/Plugins/iOS");
+		File iOSFiles = new File(project.getBasedir().getAbsolutePath() + "/Plugins/iOS");
 		if (iOSFiles.exists()) {
-			File zippedFile = new File(targetDirectory + "/" + unityDllName);
+			File zippedFile = new File(targetDirectory + "/" + unityDllName + ".ios-plugin");
 			if (zippedFile.exists()) {
 				try {
 					FileUtils.deleteDirectory(zippedFile);
@@ -77,12 +77,42 @@ public class UnityDllPackageMojo extends AbstractMojo {
 			}
 			ProcessRunner processRunner = new ProcessRunner(getLog());
 			int returnValue = processRunner.runProcess(targetDirectory + "/" + unityDllName + "-ios-plugin", "/bin/sh", "-c",
-					"zip -r ../" + unityDllName + " * -x *.meta -x *.DS_Store");
+					"zip -r ../" + unityDllName + ".ios-plugin" + " * -x *.meta -x *.DS_Store");
 			if (returnValue != 0) {
 				getLog().error("Could not zip file: " + iOSFiles.getAbsolutePath());
 				throw new MojoFailureException("Could not zip file: " + iOSFiles.getAbsolutePath());
 			}
 			mavenProjectHelper.attachArtifact(project, "ios-plugin", "ios-plugin", zippedFile);
+		}
+		
+		File androidFiles = new File(project.getBasedir().getAbsolutePath() + "/Plugins/Android");
+		if (androidFiles.exists()) {
+			File zippedFile = new File(targetDirectory + "/" + unityDllName + ".android-plugin");
+			if (zippedFile.exists()) {
+				try {
+					FileUtils.deleteDirectory(zippedFile);
+				} catch (IOException e) {
+					getLog().error("Error deleting directory");
+					getLog().error(e.getMessage());
+					throw new MojoFailureException("Error deleting directory");
+				}
+			}
+			File targetFiles = new File(targetDirectory + "/" + unityDllName + "-android-plugin");
+			try {
+				FileUtils.copyDirectory(androidFiles, targetFiles);
+			} catch (IOException e) {
+				getLog().error("Error copying directory");
+				getLog().error(e.getMessage());
+				throw new MojoFailureException("Error copying directory");
+			}
+			ProcessRunner processRunner = new ProcessRunner(getLog());
+			int returnValue = processRunner.runProcess(targetDirectory + "/" + unityDllName + "-android-plugin", "/bin/sh", "-c",
+					"zip -r ../" + unityDllName + ".android-plugin" + " * -x *.meta -x *.DS_Store");
+			if (returnValue != 0) {
+				getLog().error("Could not zip file: " + androidFiles.getAbsolutePath());
+				throw new MojoFailureException("Could not zip file: " + androidFiles.getAbsolutePath());
+			}
+			mavenProjectHelper.attachArtifact(project, "android-plugin", "android-plugin", zippedFile);
 		}
 	}
 

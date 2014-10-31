@@ -100,7 +100,7 @@ public class FrameworkDependenciesMojo extends AbstractMojo {
 				}
 				try {
 					Artifact ab = new DefaultArtifact(artifact.getGroupId(), artifact.getArtifactId(), "ios-plugin",
-							"zip", artifact.getVersion());
+							"ios-plugin", artifact.getVersion());
 					ArtifactRequest request = new ArtifactRequest(ab, projectRepos, null);
 					ArtifactResult artifactResult = repoSystem.resolveArtifact(repoSession, request);
 					Artifact a = artifactResult.getArtifact();
@@ -108,6 +108,20 @@ public class FrameworkDependenciesMojo extends AbstractMojo {
 					File iOSPluginsFolder = new File(project.getBasedir() + "/Assets/Plugins/iOS");
 					ProcessRunner processRunner = new ProcessRunner(getLog());
 					processRunner.runProcess(null, "unzip", "-uo", zippedFile.getAbsolutePath(), "-d", iOSPluginsFolder.getAbsolutePath());
+				} catch (ArtifactResolutionException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				try {
+					Artifact ab = new DefaultArtifact(artifact.getGroupId(), artifact.getArtifactId(), "android-plugin",
+							"android-plugin", artifact.getVersion());
+					ArtifactRequest request = new ArtifactRequest(ab, projectRepos, null);
+					ArtifactResult artifactResult = repoSystem.resolveArtifact(repoSession, request);
+					Artifact a = artifactResult.getArtifact();
+					File zippedFile = a.getFile();
+					File AndroidPluginsFolder = new File(project.getBasedir() + "/Assets/Plugins/Android");
+					ProcessRunner processRunner = new ProcessRunner(getLog());
+					processRunner.runProcess(null, "unzip", "-uo", zippedFile.getAbsolutePath(), "-d", AndroidPluginsFolder.getAbsolutePath());
 				} catch (ArtifactResolutionException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
