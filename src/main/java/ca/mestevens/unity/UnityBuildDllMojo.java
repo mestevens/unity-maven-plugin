@@ -3,6 +3,7 @@ package ca.mestevens.unity;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.project.MavenProject;
 
 import ca.mestevens.unity.utils.ProcessRunner;
 
@@ -35,10 +36,17 @@ public class UnityBuildDllMojo extends AbstractMojo {
 	 * @required
 	 */
 	public String unityDllName;
+	
+	/**
+	 * @parameter property="project"
+	 * @readonly
+	 * @required
+	 */
+	public MavenProject project;
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		ProcessRunner processRunner = new ProcessRunner(getLog());
-		int returnValue = processRunner.runProcess(null, xbuildLocation, unitySolutionName, "/p:OutputPath=target",
+		int returnValue = processRunner.runProcess(project.getBasedir().getAbsolutePath(), xbuildLocation, unitySolutionName, "/p:OutputPath=target",
 				"/p:AssemblyName=" + unityDllName);
 		processRunner.checkReturnValue(returnValue);
 	}
