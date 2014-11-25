@@ -24,6 +24,22 @@ where `${xcode.maven.plugin}` is the version of the plugin you want to use.
 
 ## Goals
 
+### open
+
+This goal will open your project with the unity game engine.
+
+```shell
+mvn unity:open
+```
+
+### open-solution
+
+This goal will open your project's solution with your default editor.
+
+```shell
+mvn unity:open-solution
+```
+
 ### unity-android-build
 
 Will build your unity project as a google android studio project in your target directory, as well as create a pom with any jar or aar dependencies you had in the unity pom.
