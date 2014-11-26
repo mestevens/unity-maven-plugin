@@ -109,8 +109,7 @@ public class FrameworkDependenciesMojo extends AbstractMojo {
 					ProcessRunner processRunner = new ProcessRunner(getLog());
 					processRunner.runProcess(null, "unzip", "-uo", zippedFile.getAbsolutePath(), "-d", iOSPluginsFolder.getAbsolutePath());
 				} catch (ArtifactResolutionException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					this.getLog().error("Failed to get iOS artifact", e1);
 				}
 				try {
 					Artifact ab = new DefaultArtifact(artifact.getGroupId(), artifact.getArtifactId(), "android-plugin",
@@ -123,8 +122,7 @@ public class FrameworkDependenciesMojo extends AbstractMojo {
 					ProcessRunner processRunner = new ProcessRunner(getLog());
 					processRunner.runProcess(null, "unzip", "-uo", zippedFile.getAbsolutePath(), "-d", AndroidPluginsFolder.getAbsolutePath());
 				} catch (ArtifactResolutionException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					this.getLog().error("Failed to get android artifact", e1);
 				}
 			}
 		}
