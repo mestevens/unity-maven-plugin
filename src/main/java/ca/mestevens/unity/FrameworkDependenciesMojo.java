@@ -1,5 +1,7 @@
 package ca.mestevens.unity;
 
+import ca.mestevens.unity.utils.DependencyGatherer;
+import ca.mestevens.unity.utils.ProcessRunner;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -9,20 +11,10 @@ import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.DefaultArtifact;
-import org.eclipse.aether.collection.CollectRequest;
-import org.eclipse.aether.graph.Dependency;
-import org.eclipse.aether.graph.DependencyFilter;
-import org.eclipse.aether.graph.DependencyNode;
 import org.eclipse.aether.repository.RemoteRepository;
 import org.eclipse.aether.resolution.ArtifactRequest;
 import org.eclipse.aether.resolution.ArtifactResolutionException;
 import org.eclipse.aether.resolution.ArtifactResult;
-import org.eclipse.aether.resolution.DependencyRequest;
-import org.eclipse.aether.resolution.DependencyResolutionException;
-import org.eclipse.aether.util.artifact.JavaScopes;
-
-import ca.mestevens.unity.utils.DependencyGatherer;
-import ca.mestevens.unity.utils.ProcessRunner;
 
 import java.io.File;
 import java.io.IOException;
@@ -88,16 +80,13 @@ public class FrameworkDependenciesMojo extends AbstractMojo {
 		
 		for (ArtifactResult resolvedArtifact : resolvedArtifacts) {
 			Artifact artifact = resolvedArtifact.getArtifact();
-			if (artifact.getProperty("type", "").equals("unity-library")) {
-				// Get File from result artifact
-				File file = artifact.getFile();
-				try {
-					FileUtils.copyFileToDirectory(file, resultFile);
-				} catch (IOException e) {
-					getLog().error("Problem copying dll " + file.getName() + " to " + resultFile.getAbsolutePath());
-					getLog().error(e.getMessage());
-					throw new MojoFailureException("Problem copying dll " + file.getName() + " to " + resultFile.getAbsolutePath());
-				}
+			final String typePropertyValue = artifact.getProperty("type", "");
+
+			if (typePropertyValue.equals("unity-library") || typePropertyValue.equals("dll")) {
+				this.copyArtifact(artifact, resultFile);
+			}
+
+			if (typePropertyValue.equals("unity-library")) {
 				try {
 					Artifact ab = new DefaultArtifact(artifact.getGroupId(), artifact.getArtifactId(), "ios-plugin",
 							"ios-plugin", artifact.getVersion());
@@ -130,4 +119,19 @@ public class FrameworkDependenciesMojo extends AbstractMojo {
 		}
 
 	}
+
+	private void copyArtifact(final Artifact artifact, final File resultFile) throws MojoFailureException {
+
+		final File file = artifact.getFile();
+
+		try {
+			FileUtils.copyFileToDirectory(file, resultFile);
+		} catch (final IOException e) {
+			this.getLog().error("Problem copying dll " + file.getName() + " to " + resultFile.getAbsolutePath());
+			this.getLog().error(e.getMessage());
+			throw new MojoFailureException("Problem copying dll " + file.getName() + " to " + resultFile.getAbsolutePath());
+		}
+
+	}
+
 }
