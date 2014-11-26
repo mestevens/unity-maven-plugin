@@ -29,6 +29,10 @@ import java.util.List;
  */
 public class FrameworkDependenciesMojo extends AbstractMojo {
 
+	private static final String UNITY_LIBRARY = "unity-library";
+
+	private static final String DLL = "DLL";
+
 	/**
 	 * @parameter property="project"
 	 * @readonly
@@ -89,11 +93,11 @@ public class FrameworkDependenciesMojo extends AbstractMojo {
 			Artifact artifact = resolvedArtifact.getArtifact();
 			final String typePropertyValue = artifact.getProperty("type", "");
 
-			if (typePropertyValue.equals("unity-library") || typePropertyValue.equals("dll")) {
+			if (typePropertyValue.equals(UNITY_LIBRARY) || typePropertyValue.equals(DLL)) {
 				this.copyArtifact(artifact, resultFile);
 			}
 
-			if (typePropertyValue.equals("unity-library")) {
+			if (typePropertyValue.equals(UNITY_LIBRARY)) {
 				try {
 					Artifact ab = new DefaultArtifact(artifact.getGroupId(), artifact.getArtifactId(), "ios-plugin",
 							"ios-plugin", artifact.getVersion());
