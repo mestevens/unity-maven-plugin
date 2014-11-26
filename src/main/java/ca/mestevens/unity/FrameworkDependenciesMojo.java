@@ -37,6 +37,13 @@ public class FrameworkDependenciesMojo extends AbstractMojo {
 	public MavenProject project;
 
 	/**
+	 * @parameter property="unity.plugins.directory" default-value="/Assets/Runtime/Plugins"
+	 * @readonly
+	 * @required
+	 */
+	public String pluginsDirectory;
+
+	/**
 	 * The project's remote repositories to use for the resolution of project
 	 * dependencies.
 	 * 
@@ -64,9 +71,9 @@ public class FrameworkDependenciesMojo extends AbstractMojo {
 		getLog().info("Starting execution");
 		
 		DependencyGatherer dependencyGatherer = new DependencyGatherer(getLog(), project, projectRepos, repoSystem, repoSession);
-		List<ArtifactResult> resolvedArtifacts = dependencyGatherer.resolveArtifacts();;
+		List<ArtifactResult> resolvedArtifacts = dependencyGatherer.resolveArtifacts();
 		
-		File resultFile = new File(project.getBasedir() + "/Assets/Runtime/Plugins");
+		File resultFile = new File(project.getBasedir() + this.pluginsDirectory);
 		try {
 			if (resultFile.exists()) {
 				FileUtils.deleteDirectory(resultFile);
