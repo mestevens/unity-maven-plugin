@@ -104,6 +104,19 @@ public class FrameworkDependenciesMojo extends AbstractMojo {
 			}
 
 			if (typePropertyValue.equals(UNITY_LIBRARY)) {
+
+				//Check if Assets/Plugins/iOS exists, if not create it
+				final File iosPluginsDirectory = new File(String.format("%s/Assets/Plugins/iOS", this.project.getBasedir()));
+				if(!iosPluginsDirectory.exists()) {
+					FileUtils.mkdir(iosPluginsDirectory.getAbsolutePath());
+				}
+
+				//Check if Assets/Plugins/Android exists, if not create it
+				final File androidPluginsDirectory = new File(String.format("%s/Assets/Plugins/Android", this.project.getBasedir()));
+				if(!androidPluginsDirectory.exists()) {
+					FileUtils.mkdir(androidPluginsDirectory.getAbsolutePath());
+				}
+
 				try {
 					Artifact ab = new DefaultArtifact(artifact.getGroupId(), artifact.getArtifactId(), "ios-plugin",
 							"ios-plugin", artifact.getVersion());
