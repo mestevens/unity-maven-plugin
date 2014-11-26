@@ -31,7 +31,7 @@ public class FrameworkDependenciesMojo extends AbstractMojo {
 
 	private static final String UNITY_LIBRARY = "unity-library";
 
-	private static final String DLL = "DLL";
+	private static final String DLL = "dll";
 
 	/**
 	 * @parameter property="project"
@@ -41,7 +41,7 @@ public class FrameworkDependenciesMojo extends AbstractMojo {
 	public MavenProject project;
 
 	/**
-	 * @parameter property="unity.plugins.directory" default-value="/Assets/Runtime/Plugins"
+	 * @parameter property="unity.plugins.directory" default-value="Assets/Runtime/Plugins"
 	 * @readonly
 	 * @required
 	 */
@@ -76,10 +76,10 @@ public class FrameworkDependenciesMojo extends AbstractMojo {
 		
 		DependencyGatherer dependencyGatherer = new DependencyGatherer(getLog(), project, projectRepos, repoSystem, repoSession);
 		List<ArtifactResult> resolvedArtifacts = dependencyGatherer.resolveArtifacts();
-
-		this.getLog().info(String.format("Resolved [%s] artifacts, copying to plugins directory [%s]", resolvedArtifacts.size(), this.pluginsDirectory));
 		
-		File resultFile = new File(project.getBasedir() + this.pluginsDirectory);
+		File resultFile = new File(String.format("%s/%s", this.project.getBasedir(), this.pluginsDirectory));
+		this.getLog().info(String.format("Resolved [%s] artifacts, copying to plugins directory [%s]", resolvedArtifacts.size(), resultFile.getAbsolutePath()));
+
 		try {
 			if (resultFile.exists()) {
 				FileUtils.deleteDirectory(resultFile);
@@ -94,13 +94,10 @@ public class FrameworkDependenciesMojo extends AbstractMojo {
 		for (ArtifactResult resolvedArtifact : resolvedArtifacts) {
 			Artifact artifact = resolvedArtifact.getArtifact();
 
-			final String groupIdPropertyValue = artifact.getProperty("groupId", "");
-			final String artifactIdPropertyValue = artifact.getProperty("artifactId", "");
-			final String versionPropertyValue = artifact.getProperty("version", "");
 			final String typePropertyValue = artifact.getProperty("type", "");
 
-			this.getLog().info(String.format("Copying artifact [%s:%s:%s:%s] to plugins directory [%s]", groupIdPropertyValue,
-					artifactIdPropertyValue, versionPropertyValue, typePropertyValue, this.pluginsDirectory));
+			this.getLog().info(String.format("Copying artifact [%s:%s:%s:%s] to plugins directory [%s]", artifact.getGroupId(),
+					artifact.getArtifactId(), artifact.getVersion(), typePropertyValue, resultFile.getAbsolutePath()));
 
 			if (typePropertyValue.equals(UNITY_LIBRARY) || typePropertyValue.equals(DLL)) {
 				this.copyArtifact(artifact, resultFile);
