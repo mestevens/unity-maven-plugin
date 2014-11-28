@@ -59,6 +59,11 @@ public class CopyTestDependenciesMojo extends AbstractMojo {
 		final File testDependencyDirectoryFile = new File(String.format("%s/test-dependency", this.projectBuildDirectory));
 		final File testPluginsDirectoryFile = new File(String.format("%s/%s", this.mavenProject.getBasedir(), this.testPluginsDirectory));
 
+		if (!testDependencyDirectoryFile.exists()) {
+			this.getLog().info("No test dependencies detected");
+			return;
+		}
+
 		try {
 			final FileFilter fileFilter = new WildcardFileFilter("*.dll");
 			final List<File> testDependencies = Lists.newArrayList(testDependencyDirectoryFile.listFiles(fileFilter));
