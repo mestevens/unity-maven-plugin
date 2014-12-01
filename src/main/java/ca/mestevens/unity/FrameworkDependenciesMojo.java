@@ -79,17 +79,6 @@ public class FrameworkDependenciesMojo extends AbstractMojo {
 		
 		File resultFile = new File(String.format("%s/%s", this.project.getBasedir(), this.pluginsDirectory));
 		this.getLog().info(String.format("Resolved [%s] artifacts, copying to plugins directory [%s]", resolvedArtifacts.size(), resultFile.getAbsolutePath()));
-
-		try {
-			if (resultFile.exists()) {
-				FileUtils.deleteDirectory(resultFile);
-			}
-			FileUtils.mkdir(resultFile.getAbsolutePath());
-		} catch (IOException e) {
-			getLog().error("Problem deleting or creating plugin folder at: " + resultFile.getAbsolutePath());
-			getLog().error(e.getMessage());
-			throw new MojoFailureException("Problem deleting or creating plugin folder at: " + resultFile.getAbsolutePath());
-		}
 		
 		for (ArtifactResult resolvedArtifact : resolvedArtifacts) {
 			Artifact artifact = resolvedArtifact.getArtifact();
@@ -104,18 +93,6 @@ public class FrameworkDependenciesMojo extends AbstractMojo {
 			}
 
 			if (typePropertyValue.equals(UNITY_LIBRARY)) {
-
-				//Check if Assets/Plugins/iOS exists, if not create it
-				final File iosPluginsDirectory = new File(String.format("%s/Assets/Plugins/iOS", this.project.getBasedir()));
-				if(!iosPluginsDirectory.exists()) {
-					FileUtils.mkdir(iosPluginsDirectory.getAbsolutePath());
-				}
-
-				//Check if Assets/Plugins/Android exists, if not create it
-				final File androidPluginsDirectory = new File(String.format("%s/Assets/Plugins/Android", this.project.getBasedir()));
-				if(!androidPluginsDirectory.exists()) {
-					FileUtils.mkdir(androidPluginsDirectory.getAbsolutePath());
-				}
 
 				try {
 					Artifact ab = new DefaultArtifact(artifact.getGroupId(), artifact.getArtifactId(), "ios-plugin",
