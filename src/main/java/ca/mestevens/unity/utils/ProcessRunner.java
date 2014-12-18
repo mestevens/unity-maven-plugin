@@ -49,6 +49,10 @@ public class ProcessRunner {
 			throw new MojoFailureException("Failed to execute process", e);
 		}
 	}
+	
+	public int killProcessWithName(String processName) throws MojoFailureException {
+		return runProcess(null, "killall", processName);
+	}
 
 	public void checkReturnValue(int returnValue) throws MojoFailureException {
 		if (returnValue != 0) {

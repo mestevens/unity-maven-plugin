@@ -76,6 +76,7 @@ public class AndroidCreateApkMojo extends AbstractMojo {
 		if (deployToDevices) {
 			commandList.add("android:deploy");
 		}
+		processRunner.killProcessWithName("Unity");
 		int returnValue = processRunner.runProcess(workingDirectory, commandList.toArray(new String[commandList.size()]));
 		processRunner.checkReturnValue(returnValue);
 	}

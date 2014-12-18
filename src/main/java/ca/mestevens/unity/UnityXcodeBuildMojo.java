@@ -117,6 +117,7 @@ public class UnityXcodeBuildMojo extends AbstractMojo {
 				FileUtils.forceMkdir(targetDirectory);
 			}
 			
+			processRunner.killProcessWithName("Unity");
 			int returnValue = processRunner.runProcess(null, commandList.toArray(new String[commandList.size()]));
 			processRunner.checkReturnValue(returnValue);
 			

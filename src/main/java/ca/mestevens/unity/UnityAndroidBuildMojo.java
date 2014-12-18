@@ -110,6 +110,7 @@ public class UnityAndroidBuildMojo extends AbstractMojo {
 			commandList.add("-batchmode");
 			commandList.add("-quit");
 			commandList.add("-logFile");
+			processRunner.killProcessWithName("Unity");
 			int returnValue = processRunner.runProcess(null, commandList.toArray(new String[commandList.size()]));
 			processRunner.checkReturnValue(returnValue);
 			

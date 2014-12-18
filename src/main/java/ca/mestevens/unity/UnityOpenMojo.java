@@ -27,6 +27,7 @@ public class UnityOpenMojo extends AbstractMojo {
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		this.getLog().info("Executing unity:open");
 		try {
+			processRunner.killProcessWithName("Unity");
 			this.processRunner.runProcessAsync(this.unity, "-projectPath", this.project.getBasedir().getAbsolutePath());
 		} catch (final Exception e) {
 			this.getLog().error("Failed to open unity project", e);
