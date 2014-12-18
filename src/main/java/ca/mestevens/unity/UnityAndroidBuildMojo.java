@@ -86,9 +86,11 @@ public class UnityAndroidBuildMojo extends AbstractMojo {
 
 	public void execute() throws MojoExecutionException, MojoFailureException {	
 		File scriptFile = null;
+		File scriptMetaFile = null;
 		try {
 			InputStream scriptStream = this.getClass().getClassLoader().getResourceAsStream("AndroidBuildScript.cs");
 			scriptFile = new File(project.getBasedir().getAbsolutePath() + "/Assets/Editor/AndroidBuildScript.cs");
+			scriptMetaFile = new File(project.getBasedir().getAbsolutePath() + "/Assets/Editor/AndroidBuildScript.cs.meta");
 			FileUtils.copyInputStreamToFile(scriptStream, scriptFile);
 			scriptStream.close();
 			ProcessRunner processRunner = new ProcessRunner(getLog());
@@ -135,8 +137,11 @@ public class UnityAndroidBuildMojo extends AbstractMojo {
 		} catch (Exception ex) {
 			throw new MojoFailureException(ex.getMessage());
 		} finally {
-			if (scriptFile.exists()) {
+			if (scriptFile != null && scriptFile.exists()) {
 				scriptFile.delete();
+			}
+			if (scriptMetaFile != null && scriptMetaFile.exists()) {
+				scriptMetaFile.delete();
 			}
 		}
 	}

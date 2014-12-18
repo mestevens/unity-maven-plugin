@@ -86,9 +86,11 @@ public class UnityXcodeBuildMojo extends AbstractMojo {
 
 	public void execute() throws MojoExecutionException, MojoFailureException {	
 		File scriptFile = null;
+		File scriptMetaFile = null;
 		try {
 			InputStream scriptStream = this.getClass().getClassLoader().getResourceAsStream("IOSBuildScript.cs");
 			scriptFile = new File(project.getBasedir().getAbsolutePath() + "/Assets/Editor/IOSBuildScript.cs");
+			scriptMetaFile = new File(project.getBasedir().getAbsolutePath() + "/Assets/Editor/IOSBuildScript.cs.meta");
 			FileUtils.copyInputStreamToFile(scriptStream, scriptFile);
 			scriptStream.close();
 			ProcessRunner processRunner = new ProcessRunner(getLog());
@@ -145,8 +147,11 @@ public class UnityXcodeBuildMojo extends AbstractMojo {
 		} catch (Exception ex) {
 			throw new MojoFailureException(ex.getMessage());
 		} finally {
-			if (scriptFile.exists()) {
+			if (scriptFile != null && scriptFile.exists()) {
 				scriptFile.delete();
+			}
+			if (scriptMetaFile != null && scriptMetaFile.exists()) {
+				scriptMetaFile.delete();
 			}
 		}
 	}

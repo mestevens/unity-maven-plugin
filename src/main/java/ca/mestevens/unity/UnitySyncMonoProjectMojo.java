@@ -27,9 +27,11 @@ public class UnitySyncMonoProjectMojo extends AbstractMojo {
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		File scriptFile = null;
+		File scriptMetaFile = null;
 		try {
 			InputStream scriptStream = this.getClass().getClassLoader().getResourceAsStream("SyncMonoProject.cs");
 			scriptFile = new File(project.getBasedir().getAbsolutePath() + "/Assets/Editor/SyncMonoProject.cs");
+			scriptMetaFile = new File(project.getBasedir().getAbsolutePath() + "/Assets/Editor/SyncMonoProject.cs.meta");
 			FileUtils.copyInputStreamToFile(scriptStream, scriptFile);
 			scriptStream.close();
 			ProcessRunner processRunner = new ProcessRunner(getLog());
@@ -48,8 +50,11 @@ public class UnitySyncMonoProjectMojo extends AbstractMojo {
 		} catch (Exception ex) {
 			throw new MojoFailureException(ex.getMessage());
 		} finally {
-			if (scriptFile.exists()) {
+			if (scriptFile != null && scriptFile.exists()) {
 				scriptFile.delete();
+			}
+			if (scriptMetaFile != null && scriptMetaFile.exists()) {
+				scriptMetaFile.delete();
 			}
 		}
 		
