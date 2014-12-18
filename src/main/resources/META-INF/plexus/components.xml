@@ -23,10 +23,14 @@
 						<id>default</id>
 						<phases>
 							<initialize>
-								ca.mestevens.unity:unity-maven-plugin:unity-library-dependencies
+								ca.mestevens.unity:unity-maven-plugin:unity-initialize,
+								ca.mestevens.unity:unity-maven-plugin:unity-library-dependencies,
+								ca.mestevens.unity:unity-maven-plugin:unity-copy-test-dependencies,
+								ca.mestevens.unity:unity-maven-plugin:unity-sync-mono-project
 							</initialize>
 							<compile>
-								ca.mestevens.unity:unity-maven-plugin:unity-android-build
+								ca.mestevens.unity:unity-maven-plugin:unity-android-build,
+								ca.mestevens.unity:unity-maven-plugin:unity-xcode-build
 							</compile>
 							<package>
 								ca.mestevens.unity:unity-maven-plugin:unity-android-package-apk
@@ -42,6 +46,26 @@
 						</phases>
 					</lifecycle>
 				</lifecycles>
+			</configuration>
+		</component>
+		<component>
+			<role>org.apache.maven.artifact.handler.ArtifactHandler</role>
+			<role-hint>ios-plugin</role-hint>
+			<implementation>org.apache.maven.artifact.handler.DefaultArtifactHandler
+			</implementation>
+			<configuration>
+				<extension>ios-plugin</extension>
+				<type>ios-plugin</type>
+			</configuration>
+		</component>
+		<component>
+			<role>org.apache.maven.artifact.handler.ArtifactHandler</role>
+			<role-hint>android-plugin</role-hint>
+			<implementation>org.apache.maven.artifact.handler.DefaultArtifactHandler
+			</implementation>
+			<configuration>
+				<extension>android-plugin</extension>
+				<type>android-plugin</type>
 			</configuration>
 		</component>
 		<component>
@@ -66,7 +90,10 @@
 						<id>default</id>
 						<phases>
 							<initialize>
-								ca.mestevens.unity:unity-maven-plugin:unity-library-dependencies
+								ca.mestevens.unity:unity-maven-plugin:unity-initialize,
+								ca.mestevens.unity:unity-maven-plugin:unity-library-dependencies,
+								ca.mestevens.unity:unity-maven-plugin:unity-copy-test-dependencies,
+								ca.mestevens.unity:unity-maven-plugin:unity-sync-mono-project
 							</initialize>
 							<compile>
 								ca.mestevens.unity:unity-maven-plugin:unity-build-dll

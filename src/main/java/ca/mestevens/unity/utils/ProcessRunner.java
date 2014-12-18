@@ -1,12 +1,13 @@
 package ca.mestevens.unity.utils;
 
+import com.google.common.base.Joiner;
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.logging.Log;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugin.logging.Log;
 
 public class ProcessRunner {
 
@@ -39,7 +40,20 @@ public class ProcessRunner {
 			throw new MojoFailureException(e.getMessage());
 		}
 	}
+
+	public void runProcessAsync(final String... strings) throws MojoFailureException {
+		try {
+			Runtime.getRuntime().exec(Joiner.on(" ").join(strings));
+		} catch(final Exception e) {
+			this.log.error("Failed to execute process", e);
+			throw new MojoFailureException("Failed to execute process", e);
+		}
+	}
 	
+	public int killProcessWithName(String processName) throws MojoFailureException {
+		return runProcess(null, "killall", processName);
+	}
+
 	public void checkReturnValue(int returnValue) throws MojoFailureException {
 		if (returnValue != 0) {
 			throw new MojoFailureException("Failed to build project.");
