@@ -4,9 +4,19 @@
 
 	<groupId>ca.mestevens.unity</groupId>
 	<artifactId>unity-maven-plugin</artifactId>
-	<packaging>maven-plugin</packaging>
 	<version>0.2.0-SNAPSHOT</version>
+	<packaging>maven-plugin</packaging>
 	<name>unity-maven-plugin</name>
+	<description>A maven plugin to facilitate unity building/dependency management/testing</description>
+	<url>https://github.com/mestevens/unity-maven-plugin</url>
+	
+	<developers>
+		<developer>
+			<name>Matthew Stevens</name>
+			<email>mestevens@live.ca</email>
+			<organizationUrl>https://github.com/mestevens</organizationUrl>
+		</developer>
+	</developers>
 
 	<licenses>
 		<license>
@@ -17,8 +27,37 @@
 	</licenses>
 
 	<scm>
-		<url>https://github.com/mestevens/unity-maven-plugin</url>
+		<connection>scm:git:git@github.com:mestevens/unity-maven-plugin.git</connection>
+		<developerConnection>scm:git:git@github.com:mestevens/unity-maven-plugin.git</developerConnection>
+		<url>git@github.com:mestevens/unity-maven-plugin.git</url>
 	</scm>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	
+	<profiles>
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 	<build>
 		<resources>
@@ -101,4 +140,18 @@
 			<version>2.2.0</version>
 		</dependency>
 	</dependencies>
+	
+	<distributionManagement>
+		<repository>
+			<id>sonatype-oss</id>
+			<name>Sonatype OSS</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+		</repository>
+		<snapshotRepository>
+			<id>sonatype-oss</id>
+			<name>Sonatype OSS</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+	
 </project>
