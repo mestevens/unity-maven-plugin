@@ -144,3 +144,8 @@ Packages the dll created by unity-build-dll for installation/deployment as a uni
 #### Properties
 * unity.dll.name
 	* The name of the dll that will be built. Default value is `${project.artifactId}-${project.version}`
+	
+### Release Notes
+
+* 0.2
+	* Initial release
