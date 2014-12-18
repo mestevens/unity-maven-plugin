@@ -8,17 +8,8 @@
 			<plugin>
 				<groupId>ca.mestevens.ios</groupId>
 				<artifactId>xcode-maven-plugin</artifactId>
-				<version>0.3.1</version>
+				<version>0.3.3</version>
 				<extensions>true</extensions>
-				<executions>
-					<execution>
-						<id>xcode-get-frameworks</id>
-						<phase>initialize</phase>
-						<goals>
-							<goal>framework-dependencies</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>

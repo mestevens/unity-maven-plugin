@@ -127,6 +127,7 @@ public class UnityXcodeBuildMojo extends AbstractMojo {
 			String pomInfoString = "<groupId>" + project.getGroupId() + "</groupId>";
 			pomInfoString += "<artifactId>" + unityProjectName + "</artifactId>";
 			pomInfoString += "<version>" + project.getVersion() + "</version>";
+			pomInfoString += "<packaging>xcode-application</packaging>";
 			pomString = pomString.replace("<pomInfo></pomInfo>", pomInfoString);
 			
 			DependencyGatherer dependencyGatherer = new DependencyGatherer(getLog(), project, projectRepos, repoSystem, repoSession);
