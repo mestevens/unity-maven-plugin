@@ -25,7 +25,8 @@
 							<initialize>
 								ca.mestevens.unity:unity-maven-plugin:unity-initialize,
 								ca.mestevens.unity:unity-maven-plugin:unity-library-dependencies,
-								ca.mestevens.unity:unity-maven-plugin:unity-copy-test-dependencies
+								ca.mestevens.unity:unity-maven-plugin:unity-copy-test-dependencies,
+								ca.mestevens.unity:unity-maven-plugin:unity-sync-mono-project
 							</initialize>
 							<compile>
 								ca.mestevens.unity:unity-maven-plugin:unity-android-build
@@ -90,7 +91,8 @@
 							<initialize>
 								ca.mestevens.unity:unity-maven-plugin:unity-initialize,
 								ca.mestevens.unity:unity-maven-plugin:unity-library-dependencies,
-								ca.mestevens.unity:unity-maven-plugin:unity-copy-test-dependencies
+								ca.mestevens.unity:unity-maven-plugin:unity-copy-test-dependencies,
+								ca.mestevens.unity:unity-maven-plugin:unity-sync-mono-project
 							</initialize>
 							<compile>
 								ca.mestevens.unity:unity-maven-plugin:unity-build-dll
