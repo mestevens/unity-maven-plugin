@@ -35,7 +35,7 @@ public class UnityXcodeBuildMojo extends AbstractMojo {
 	public String unity;
 	
 	/**
-	 * @parameter property="xcode.project.ouput.directory" default-value="Assets/../target"
+	 * @parameter property="xcode.project.ouput.directory" default-value="target"
 	 * @readonly
 	 * @required
 	 */
@@ -142,7 +142,7 @@ public class UnityXcodeBuildMojo extends AbstractMojo {
 			
 			FileUtils.writeStringToFile(pomFile, pomString);
 			
-			processRunner.runProcess(xcodeTarget + "/" + unityProjectName + "-ios", "mvn", "clean", "initialize", "-Dxcode.add.frameworks", "-Dxcode.project.name=Unity-iPhone.xcodeproj");
+			processRunner.runProcess(xcodeTarget + "/" + unityProjectName + "-ios", "mvn", "clean", "initialize", "-Dxcode.add.dependencies", "-Dxcode.project.name=Unity-iPhone.xcodeproj");
 			
 		} catch (Exception ex) {
 			throw new MojoFailureException(ex.getMessage());

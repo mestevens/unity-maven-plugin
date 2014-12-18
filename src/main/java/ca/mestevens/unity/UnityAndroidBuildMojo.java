@@ -35,7 +35,7 @@ public class UnityAndroidBuildMojo extends AbstractMojo {
 	public String unity;
 	
 	/**
-	 * @parameter property="android.project.target.directory" default-value="Assets/../target"
+	 * @parameter property="android.project.target.directory" default-value="target"
 	 * @readonly
 	 * @required
 	 */

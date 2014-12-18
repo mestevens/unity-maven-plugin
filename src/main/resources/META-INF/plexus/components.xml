@@ -29,7 +29,8 @@
 								ca.mestevens.unity:unity-maven-plugin:unity-sync-mono-project
 							</initialize>
 							<compile>
-								ca.mestevens.unity:unity-maven-plugin:unity-android-build
+								ca.mestevens.unity:unity-maven-plugin:unity-android-build,
+								ca.mestevens.unity:unity-maven-plugin:unity-xcode-build
 							</compile>
 							<package>
 								ca.mestevens.unity:unity-maven-plugin:unity-android-package-apk

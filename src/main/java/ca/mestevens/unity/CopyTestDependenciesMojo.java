@@ -36,7 +36,7 @@ public class CopyTestDependenciesMojo extends AbstractMojo {
 	@Parameter(property = "project.build.directory", required = true, readonly = true)
 	private String projectBuildDirectory;
 
-	@Parameter(property = "unity.plugins.directory", defaultValue = "Assets/Editor/Plugins", required = true, readonly = true)
+	@Parameter(property = "unity.test.plugins.directory", defaultValue = "Assets/Editor/Plugins", required = true, readonly = true)
 	private String testPluginsDirectory;
 
 	@Override
