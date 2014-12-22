@@ -27,12 +27,12 @@ public class UnitySyncMonoProjectMojo extends AbstractMojo {
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		File scriptFile = null;
-		File scriptMetaFile = null;
 		try {
 			InputStream scriptStream = this.getClass().getClassLoader().getResourceAsStream("SyncMonoProject.cs");
-			scriptFile = new File(project.getBasedir().getAbsolutePath() + "/Assets/Editor/SyncMonoProject.cs");
-			scriptMetaFile = new File(project.getBasedir().getAbsolutePath() + "/Assets/Editor/SyncMonoProject.cs.meta");
-			FileUtils.copyInputStreamToFile(scriptStream, scriptFile);
+			scriptFile = new File(project.getBasedir().getAbsolutePath() + "/Assets/Editor/Plugins/SyncMonoProject.cs");
+			if (!scriptFile.exists()) {
+				FileUtils.copyInputStreamToFile(scriptStream, scriptFile);
+			}
 			scriptStream.close();
 			ProcessRunner processRunner = new ProcessRunner(getLog());
 			List<String> commandList = new ArrayList<String>();
@@ -49,15 +49,9 @@ public class UnitySyncMonoProjectMojo extends AbstractMojo {
 			processRunner.checkReturnValue(returnValue);
 		} catch (Exception ex) {
 			throw new MojoFailureException(ex.getMessage());
-		} finally {
-			if (scriptFile != null && scriptFile.exists()) {
-				scriptFile.delete();
-			}
-			if (scriptMetaFile != null && scriptMetaFile.exists()) {
-				scriptMetaFile.delete();
-			}
 		}
-		
+		//Note we don't delete the script file, this is because in order for Mono to realize that the file doesn't exist
+		//we would have to resync the project after it was deleted, which is not possible.
 	}
 
 }
