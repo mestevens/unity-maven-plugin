@@ -8,7 +8,7 @@
 			<plugin>
 				<groupId>ca.mestevens.ios</groupId>
 				<artifactId>xcode-maven-plugin</artifactId>
-				<version>0.3.3</version>
+				<version>RELEASE</version>
 				<extensions>true</extensions>
 			</plugin>
 		</plugins>
