@@ -1,11 +1,8 @@
 package ca.mestevens.unity;
 
-import java.io.File;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -26,32 +23,19 @@ public class UnitySyncMonoProjectMojo extends AbstractMojo {
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		File scriptFile = null;
-		try {
-			InputStream scriptStream = this.getClass().getClassLoader().getResourceAsStream("SyncMonoProject.cs");
-			scriptFile = new File(project.getBasedir().getAbsolutePath() + "/Assets/Editor/Plugins/SyncMonoProject.cs");
-			if (!scriptFile.exists()) {
-				FileUtils.copyInputStreamToFile(scriptStream, scriptFile);
-			}
-			scriptStream.close();
-			ProcessRunner processRunner = new ProcessRunner(getLog());
-			List<String> commandList = new ArrayList<String>();
-			commandList.add(unity);
-			commandList.add("-projectPath");
-			commandList.add(project.getBasedir().getAbsolutePath());
-			commandList.add("-executeMethod");
-			commandList.add("ca.mestevens.unity.SyncMonoProject.SyncProject");
-			commandList.add("-batchmode");
-			commandList.add("-quit");
-			commandList.add("-logFile");
-			processRunner.killProcessWithName("Unity");
-			int returnValue = processRunner.runProcess(null, commandList.toArray(new String[commandList.size()]));
-			processRunner.checkReturnValue(returnValue);
-		} catch (Exception ex) {
-			throw new MojoFailureException(ex.getMessage());
-		}
-		//Note we don't delete the script file, this is because in order for Mono to realize that the file doesn't exist
-		//we would have to resync the project after it was deleted, which is not possible.
+		ProcessRunner processRunner = new ProcessRunner(getLog());
+		List<String> commandList = new ArrayList<String>();
+		commandList.add(unity);
+		commandList.add("-projectPath");
+		commandList.add(project.getBasedir().getAbsolutePath());
+		commandList.add("-executeMethod");
+		commandList.add("UnityEditor.SyncVS.SyncSolution");
+		commandList.add("-batchmode");
+		commandList.add("-quit");
+		commandList.add("-logFile");
+		processRunner.killProcessWithName("Unity");
+		int returnValue = processRunner.runProcess(null, commandList.toArray(new String[commandList.size()]));
+		processRunner.checkReturnValue(returnValue);
 	}
 
 }
