@@ -50,33 +50,13 @@
 		</component>
 		<component>
 			<role>org.apache.maven.artifact.handler.ArtifactHandler</role>
-			<role-hint>ios-plugin</role-hint>
-			<implementation>org.apache.maven.artifact.handler.DefaultArtifactHandler
-			</implementation>
-			<configuration>
-				<extension>ios-plugin</extension>
-				<type>ios-plugin</type>
-			</configuration>
-		</component>
-		<component>
-			<role>org.apache.maven.artifact.handler.ArtifactHandler</role>
-			<role-hint>android-plugin</role-hint>
-			<implementation>org.apache.maven.artifact.handler.DefaultArtifactHandler
-			</implementation>
-			<configuration>
-				<extension>android-plugin</extension>
-				<type>android-plugin</type>
-			</configuration>
-		</component>
-		<component>
-			<role>org.apache.maven.artifact.handler.ArtifactHandler</role>
 			<role-hint>unity-library</role-hint>
 			<implementation>org.apache.maven.artifact.handler.DefaultArtifactHandler
 			</implementation>
 			<configuration>
-				<extension>dll</extension>
+				<extension>unity-library</extension>
 				<language>c#</language>
-				<type>dll</type>
+				<type>unity-library</type>
 			</configuration>
 		</component>
 		<component>
