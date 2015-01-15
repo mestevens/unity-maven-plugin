@@ -17,6 +17,7 @@ import org.eclipse.aether.repository.RemoteRepository;
 
 import ca.mestevens.unity.utils.DependencyGatherer;
 import ca.mestevens.unity.utils.ProcessRunner;
+import ca.mestevens.unity.utils.UnityMenuCommands;
 
 /**
  * Goal which builds the android project from unity
@@ -87,6 +88,7 @@ public class UnityXcodeBuildMojo extends AbstractMojo {
 	public void execute() throws MojoExecutionException, MojoFailureException {	
 		File scriptFile = null;
 		File scriptMetaFile = null;
+		UnityMenuCommands menuCommands = new UnityMenuCommands(new ProcessRunner(getLog()), unity, project.getBasedir().getAbsolutePath());
 		try {
 			InputStream scriptStream = this.getClass().getClassLoader().getResourceAsStream("IOSBuildScript.cs");
 			scriptFile = new File(project.getBasedir().getAbsolutePath() + "/Assets/Editor/IOSBuildScript.cs");
@@ -94,7 +96,7 @@ public class UnityXcodeBuildMojo extends AbstractMojo {
 			FileUtils.copyInputStreamToFile(scriptStream, scriptFile);
 			scriptStream.close();
 			ProcessRunner processRunner = new ProcessRunner(getLog());
-			
+			menuCommands.syncMonoDevelopProject();
 			List<String> commandList = new ArrayList<String>();
 			commandList.add(unity);
 			commandList.add("-projectPath");
@@ -153,6 +155,7 @@ public class UnityXcodeBuildMojo extends AbstractMojo {
 			if (scriptMetaFile != null && scriptMetaFile.exists()) {
 				scriptMetaFile.delete();
 			}
+			menuCommands.syncMonoDevelopProject();
 		}
 	}
 
