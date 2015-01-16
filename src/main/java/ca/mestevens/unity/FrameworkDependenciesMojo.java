@@ -96,7 +96,7 @@ public class FrameworkDependenciesMojo extends AbstractMojo {
 				File unityLibraryFile = new File(String.format("%s/target/unity-libraries/%s", this.project.getBasedir(), artifact.getFile().getName()));
 				File unityLibraryResultFile = new File(String.format("%s/target/unity-libraries/%s", this.project.getBasedir(), artifact.getArtifactId()));
 				ProcessRunner processRunner = new ProcessRunner(getLog());
-				processRunner.runProcess(null, "unzip", unityLibraryFile.getAbsolutePath(), "-d", unityLibraryResultFile.getAbsolutePath());
+				processRunner.runProcess(null, "unzip", "-o", unityLibraryFile.getAbsolutePath(), "-d", unityLibraryResultFile.getAbsolutePath());
 				boolean cloneSource = project.getProperties().containsKey(artifact.getGroupId() + ":" + artifact.getArtifactId() + ":clone-source");
 				if (cloneSource) {
 					File scmFile = new File(String.format("%s/.scm-commands", unityLibraryResultFile.getAbsolutePath()));
