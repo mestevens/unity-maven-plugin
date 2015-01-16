@@ -3,7 +3,7 @@
 
 	<groupId>ca.mestevens.unity</groupId>
 	<artifactId>unity-maven-plugin</artifactId>
-	<version>0.2.2</version>
+	<version>0.2.3</version>
 	<packaging>maven-plugin</packaging>
 	<name>unity-maven-plugin</name>
 	<description>A maven plugin to facilitate unity building/dependency management/testing</description>
